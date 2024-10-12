@@ -1,0 +1,31 @@
+/* MENU */
+.menu {
+    background-color: black;
+    /*position: fixed;*/
+    width: 100%;
+    z-index: 999; 
+}
+
+.menu nav {
+    background-color: black !important; 
+}
+
+.menu-content {
+    width: 100%;
+    padding: 20px; 
+}
+
+.menu-content a {
+    font-size: 20px;
+    color: #DA0945;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-decoration: none; 
+}
+
+.menu-content img {
+    width: 64px;
+    height: 64px; 
+}
+/* FIN MENU */
+
+
