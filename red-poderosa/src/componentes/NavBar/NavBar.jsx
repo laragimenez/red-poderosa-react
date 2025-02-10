@@ -1,13 +1,15 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css'; //importamos la hoja de stylo de bootstrap
+import './NavBar.css'; //esta abajo de la libreria bootstrap por que tomamos la prioridad del estilo de bootstrap pero se puede cambiar el estilo, es en forma cascada.
+
 import React from 'react';
 import Container  from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+
 
 const NavBar = () => {
     return (
-        <Navbar expand="lg" className="bg-body-tertiary">
+        <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
             <Container>
                 <Navbar.Brand href="#home">
                         <img 
@@ -21,17 +23,9 @@ const NavBar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#home">Home</Nav.Link>
-                        <Nav.Link href="#link">Peliculas</Nav.Link>
-                        <NavDropdown title="Genero" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.2">Terror</NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.3">Comedia</NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.4">Romance</NavDropdown.Item>
-                        </NavDropdown>
+                        <Nav.Link href="#home">Users</Nav.Link>
+                        <Nav.Link href="#link">Films</Nav.Link>
+                        <Nav.Link href="#link">Genres</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
