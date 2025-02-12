@@ -11,7 +11,7 @@ const NavBar = () => {
     return (
         <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
             <Container>
-                <Navbar.Brand href="#home">
+                <Navbar.Brand href="Home">
                         <img 
                             src="/Logo.ico" 
                             alt="Logo" 
@@ -23,9 +23,9 @@ const NavBar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#home">Users</Nav.Link>
-                        <Nav.Link href="#link">Films</Nav.Link>
-                        <Nav.Link href="#link">Genres</Nav.Link>
+                        <Nav.Link href="/Users">Users</Nav.Link>
+                        <Nav.Link href="/Movies">Movies</Nav.Link>
+                        <Nav.Link href="/Genres">Genres</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

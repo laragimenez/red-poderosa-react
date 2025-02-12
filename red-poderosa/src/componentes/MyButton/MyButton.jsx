@@ -4,10 +4,10 @@ import './MyButton.css';
 import React from 'react'
 import Button from 'react-bootstrap/Button';
 
-const MyButton = ({text, callback, variant}) => { //dentro de la llave reciben parametros, la funcion de cada parametro de callback esta definido en App.js
+const MyButton = ({text, callback}) => { //dentro de la llave reciben parametros, la funcion de cada parametro de callback esta definido en App.js
   return (
   <>
-  <Button onClick= {callback} variant={variant}>{text}</Button> 
+  <Button onClick= {callback}>{text}</Button> 
     
   </>
 )}
