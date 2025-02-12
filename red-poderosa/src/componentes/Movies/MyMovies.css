@@ -2,23 +2,34 @@
 .header {
     display: flex;
     flex-direction: column;
-    margin: 10px;
-  }
-  
-.header .btn {
-    width: 100px;
-    background-color: brown;  /* Esto asegura que el botón se alinee a la derecha */
-    margin-left: auto;
-  }
-.header h2{
-    text-align: center; /* Centra el texto */
+    align-items: center;
+    gap: 15px; /* Espaciado entre elementos */
+    margin: 15px;
+    
+}
+
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px; /* Añade margen interno para evitar que los elementos estén pegados a los bordes */
+}
+
+.search-container input {
+    width: 60%; /* Ajusta el tamaño del input */
+    padding: 8px;
+}
+
+.search-container .btn {
+    padding: 8px 15px;
 }
   
 .col-id {
     width: 2%;
   }
 .col-actions {
-    width: 8%;
+    width: 12%;
   }
 
 .pagination-container {

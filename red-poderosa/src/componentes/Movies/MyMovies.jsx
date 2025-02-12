@@ -33,14 +33,17 @@ const MyMovies = () => {
     <>
       <div className="header">
         <h2>Lista de peliculas</h2>
-        <Link to="/movies" className="btn btn-primary"><i className="bi bi-plus-lg"></i>Nuevo</Link>  {/* Link para crear nueva película */}
+        <div className="search-container ">
+          {/* Campo de búsqueda */}
+          <input type='text'     
+            value={query} 
+            onChange={find} 
+            placeholder="Buscar película..." 
+            className="form-control w-50"/> 
+          <Link to="/movies" className="btn btn-primary"><i className="fa fa-plus"></i>Nuevo</Link>  {/* Link para crear nueva película */}
+        </div>
       </div>
-    {/* Campo de búsqueda */}
-    <input type='text'     
-           value={query} 
-           onChange={find} 
-           placeholder="Buscar película..." 
-           className="form-control mb-3"/>  
+ 
     {
       loading ?
         <div className='spinner'> 
@@ -51,7 +54,7 @@ const MyMovies = () => {
           <tr>
             <th className="col-id">#</th>
             <th className="col-title">Titulo</th>
-            <th className="col-genre">Genero</th>
+            <th className="col-genre">img</th>
             <th className="col-description">Description</th>
             <th className="col-actions">Acciones</th>
           </tr>
@@ -63,8 +66,9 @@ const MyMovies = () => {
             <td>Otto</td>
             <td>@mdo</td>
             <td>
+              <Link to="" className='btn btn-primary'><i class="fa fa-eye"></i></Link>
               <Link tO={`/edit/${movies.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
-              <Link to="" className='btn btn-primary'><i className="fa fa-times"></i></Link> 
+              <Link to="" className='btn btn-primary'><i className="fa fa-times"></i></Link>  
             </td>
           </tr>
           <tr>
@@ -73,6 +77,7 @@ const MyMovies = () => {
             <td>Thornton</td>
             <td>@fat</td>
             <td>
+              <Link to="" className='btn btn-primary'><i class="fa fa-eye"></i></Link>
               <Link to="" className='btn btn-primary'><i className="fa fa-pencil"></i></Link> 
               <Link to="" className='btn btn-primary'><i className="fa fa-times"></i></Link> 
             </td>
