@@ -1,0 +1,29 @@
+/* Cambiar tamaño de las columnas */
+.header {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+  }
+  
+.header .btn {
+    width: 100px;
+    background-color: brown;  /* Esto asegura que el botón se alinee a la derecha */
+    margin-left: auto;
+  }
+.header h2{
+    text-align: center; /* Centra el texto */
+}
+  
+.col-id {
+    width: 2%;
+  }
+.col-actions {
+    width: 8%;
+  }
+
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Centrar los botones */
+    align-items: center;
+    margin-top: 20px;
+  }
