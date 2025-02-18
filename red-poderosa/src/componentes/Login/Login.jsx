@@ -66,34 +66,36 @@ const Login = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Iniciar Sesión</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={startLogin} className="w-50 mx-auto">
-        <div className="mb-3">
-          <label>Email</label>
-          <input 
-            type="email" 
-            className="form-control" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label>Contraseña</label>
-          <input 
-            type="password" 
-            className="form-control" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required //obliga a que el usuario complete ambos campos antes de enviar el formulario.
-          />
-        </div>
-        <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-          {loading ? "Cargando..." : "Iniciar Sesión"}
-        </button>
-      </form>
+    <div className='container'>
+      <div className="login-container">
+        <h2>Iniciar Sesión</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
+        <form onSubmit={startLogin} className="w-50 mx-auto">
+          <div className="mb-3">
+            <label>Email</label>
+            <input 
+              type="email" 
+              className="form-control" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label>Contraseña</label>
+            <input 
+              type="password" 
+              className="form-control" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required //obliga a que el usuario complete ambos campos antes de enviar el formulario.
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            {loading ? "Cargando..." : "Iniciar Sesión"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

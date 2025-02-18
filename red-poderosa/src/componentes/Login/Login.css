@@ -1,0 +1,21 @@
+/* Contenedor que envuelve el login */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Mueve el contenido más hacia arriba */
+    margin-top: 20px;
+}
+
+/* Contenedor centrado con borde de color */
+.login-container {
+    padding: 10px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+    border: 2px solid hsl(0, 95%, 14%);
+}
+
+.btn-primary:hover {
+    background-color: red; /* Rojo más oscuro al pasar el mouse */
+}
+
