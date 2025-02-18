@@ -23,14 +23,16 @@ const Login = () => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  // Simulación directa sin setTimeout ni promesas-ESTO DESPUES SE BORRA POR QUE ES PARA SIMULAR UNA CONEXION CON BACKEND
-  const simpleLogin = (email, password) => {
-    // Aquí puedes poner las credenciales mockeadas directamente
-    if (email === "janet@domain.com" && password === "p12345") {
-      return { user: { email }, token: "mock_token_123" };
-    } else {
-      throw new Error("Credenciales incorrectas");
-    }
+  const falsologin = async (email, password) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (email === "janet@domain.com" && password === "p12345") {
+          resolve({ user: { email }, token: "mock_token_123" });
+        } else {
+          reject(new Error("Credenciales incorrectas"));
+        }
+      }, 1000);
+    });
   };
   
   const startLogin = async (e) => { //async permite usar await dentro de la función.
@@ -44,19 +46,16 @@ const Login = () => {
     }
       
     if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres.");
+      setError("La contraseña debe tener al menos 6 caracteres."); 
       return;
     }
   
     setLoading(true); //Activa el estado de carga (loading = true) para mostrar "Cargando..."
     
     try {
-      const data = simpleLogin(email, password); 
+      const data = await falsologin(email, password); 
       // Guardamos el usuario en localStorage
-      localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token); // Si usas un token
-  
-      alert("Inicio de sesión exitoso");  //Si el login es exitoso, muestra un mensaje de alerta "Inicio de sesión exitoso
       navigate("/home");// Aquí redirige al usuario a otra página, por ejemplo:
     } catch (err) {
       setError(err.message);

@@ -11,23 +11,17 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
     const navigate = useNavigate();
+    const token = localStorage.getItem("token");
     
-      // Verificamos si el token está en localStorage al cargar la página
-      useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          navigate("/"); // Si no hay token, redirigimos al login
-        }
-      }, [navigate]);
     
-      const handleLogout = () => {
+    const handleLogout = () => {
         // Eliminar los datos del localStorage
         localStorage.removeItem("user");
         localStorage.removeItem("token"); // Si usas un token de autenticación
     
         // Redirigir al login
         navigate("/"); 
-      };
+    };
     
     return (
         <Navbar bg="dark" data-bs-theme="dark" expand="lg">
@@ -44,14 +38,19 @@ const NavBar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="/movies">Movies</Nav.Link>
-                        <Nav.Link href="/genres">Genres</Nav.Link>
-                        <Nav.Link href="/users">Users</Nav.Link>
+                        {token && (
+                            <>
+                            <Nav.Link href="/movies">Movies</Nav.Link>
+                            <Nav.Link href="/genres">Genres</Nav.Link>
+                            <Nav.Link href="/users">Users</Nav.Link>
+                            </>
+                        )}
                     </Nav>
-                    {/* Solo mostrar el botón de Cerrar sesión si el usuario está autenticado */}
-                    <Button variant="outline-light" onClick={handleLogout}>
-                        Cerrar sesión
-                    </Button>
+                    {token && (
+                        <Button variant="outline-light" onClick={handleLogout}>
+                            Cerrar sesión
+                        </Button>
+                    )}
                 </Navbar.Collapse>
             </Container>
         </Navbar>
