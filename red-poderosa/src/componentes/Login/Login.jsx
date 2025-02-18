@@ -1,18 +1,68 @@
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); // Almacena mensajes de error (si los hay).
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const startLogin = (e) => {
+  // Verificamos si ya hay un token y redirigimos al home
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/home");  // Si ya hay token, redirigimos automáticamente a Home
+    }
+  }, [navigate]);
+  
+  const validateEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
+  // Simulación directa sin setTimeout ni promesas-ESTO DESPUES SE BORRA POR QUE ES PARA SIMULAR UNA CONEXION CON BACKEND
+  const simpleLogin = (email, password) => {
+    // Aquí puedes poner las credenciales mockeadas directamente
+    if (email === "janet@domain.com" && password === "p12345") {
+      return { user: { email }, token: "mock_token_123" };
+    } else {
+      throw new Error("Credenciales incorrectas");
+    }
+  };
+  
+  const startLogin = async (e) => { //async permite usar await dentro de la función.
     e.preventDefault();
-    console.log("Iniciando sesion:", email, password);
-    // Aquí iría la lógica de autenticación en el futuro.
+    setError("");
+      
+    // Validaciones
+    if (!validateEmail(email)) {
+      setError("Por favor, ingresa un correo válido.");
+      return;
+    }
+      
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+  
+    setLoading(true); //Activa el estado de carga (loading = true) para mostrar "Cargando..."
+    
+    try {
+      const data = simpleLogin(email, password); 
+      // Guardamos el usuario en localStorage
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token); // Si usas un token
+  
+      alert("Inicio de sesión exitoso");  //Si el login es exitoso, muestra un mensaje de alerta "Inicio de sesión exitoso
+      navigate("/home");// Aquí redirige al usuario a otra página, por ejemplo:
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,13 +87,24 @@ const Login = () => {
             className="form-control" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
-            required
+            required //obliga a que el usuario complete ambos campos antes de enviar el formulario.
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100">Iniciar Sesión</button>
+        <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+          {loading ? "Cargando..." : "Iniciar Sesión"}
+        </button>
       </form>
     </div>
   );
 };
 
+
 export default Login;
+
+
+/*try {
+  const response = await fetch("https://tu-api.com/login", {  // envía los datos al backend (https://tu-api.com/login) usando POST
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });*/

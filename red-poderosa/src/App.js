@@ -1,6 +1,6 @@
 import './App.css';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import NavBar from './componentes/NavBar/NavBar'; // Asegúrate de tener la ruta correcta.
 import Home from './componentes/Home/MyHome';
 import MyButton from './componentes/MyButton/MyButton';
@@ -13,22 +13,7 @@ import NotFound from './componentes/NotFound/NotFound';
 import Error from './componentes/Error/Error';
 import Users from './componentes/Users/Users';
 import Login from './componentes/Login/Login';
-
-/*const create = () => {
-    console.log("crear Movie");
-}
-
-const delaite = () => {
-    console.log("eliminar Movie");
-}
-
-const view = () => {
-    console.log("ver Movie");
-}
-const update = () => {
-    console.log("actualizar Movie");
-}
-
+/*
 function App() {
     return (
         <>
@@ -40,27 +25,46 @@ function App() {
 } */
 
     
-function App() {
+const App = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); // Estado para esperar la verificación del token
+    const [message, setMessage] = useState("");  // Para el mensaje de advertencia
 
-    const sumar = () => {
-        setCount(count + 1);
+      
+    // Verificar el token cuando se cargue el componente
+    useEffect(() => {
+        const token = localStorage.getItem("token"); // Verifica si hay un token en el localStorage
+        setIsAuthenticated(!!token);
+        setIsLoading(false);  // Si hay un token, se considera autenticado
+    }, []);
+
+    if (isLoading) {
+        return <div>Cargando...</div>; // Puedes mostrar un mensaje o animación de carga mientras se verifica el token
     }
-    const restar = () => {
-        setCount(count - 1);
-    }
-    const [count, setCount]= useState(1);
+
+    const ProtectedRoute = ({ element, ...rest }) => {
+        if (isAuthenticated) {
+            return element;
+        } else {
+            setMessage("Por favor, inicia sesión para acceder a esta página.");
+            return <Navigate to="/" />;
+        }
+    };
+
 
     return (
     <>
     <BrowserRouter>
 
     <NavBar/>
+    {message && <div style={{ color: 'red', padding: '10px', textAlign: 'center' }}>{message}</div>}
 
     <Routes>
-        <Route exact path='/login' element={<Login/>}></Route>
-        <Route exact path='/home' element={<Home/>}></Route>
-        <Route exact path='/movies' element={<MyMovies/>}></Route>
-        <Route exact path='/users' element={<Users/>}></Route>
+        <Route exact path='/' element={<Login/>}></Route> {/*carga la página de login cuando el usuario va a "/" */}
+        {/* Ruta de home protegida: solo accesible si el usuario está autenticado */}
+        <Route exact path='/home' element={ <ProtectedRoute element={<Home/> }/>}></Route>
+        <Route exact path='/movies' element={ <ProtectedRoute element={<MyMovies/>}/>}></Route>
+        <Route exact path='/users' element={ <ProtectedRoute element={<Users/>}/>}></Route>
         <Route exact path='/movies/:movieName' element={<Movie/>}></Route>
         <Route exact path='/Page-NotFound' element={<NotFound/>}></Route>
         <Route exact path='/Error' element={<Error/>}></Route>
