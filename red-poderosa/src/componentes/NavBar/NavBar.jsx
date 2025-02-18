@@ -11,7 +11,7 @@ const NavBar = () => {
     return (
         <Navbar bg="dark" data-bs-theme="dark" expand="lg">
             <Container>
-                <Navbar.Brand href="Home">
+                <Navbar.Brand href="home">
                         <img 
                             src="/Logo.ico" 
                             alt="Logo" 

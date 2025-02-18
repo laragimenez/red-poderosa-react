@@ -12,6 +12,7 @@ import Movie from './componentes/Movie/Movie';
 import NotFound from './componentes/NotFound/NotFound';
 import Error from './componentes/Error/Error';
 import Users from './componentes/Users/Users';
+import Login from './componentes/Login/Login';
 
 /*const create = () => {
     console.log("crear Movie");
@@ -56,7 +57,8 @@ function App() {
     <NavBar/>
 
     <Routes>
-        <Route exact path='/Home' element={<Home/>}></Route>
+        <Route exact path='/login' element={<Login/>}></Route>
+        <Route exact path='/home' element={<Home/>}></Route>
         <Route exact path='/movies' element={<MyMovies/>}></Route>
         <Route exact path='/users' element={<Users/>}></Route>
         <Route exact path='/movies/:movieName' element={<Movie/>}></Route>

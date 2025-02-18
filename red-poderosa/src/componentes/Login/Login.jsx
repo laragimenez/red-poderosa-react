@@ -1,40 +1,25 @@
+import './Login.css';
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const startLogin = (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:5000/api/login", { // Cambia esto por la URL de tu API
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("user", JSON.stringify(data.usuario)); // Guardamos el usuario
-        navigate("/dashboard"); // Redirige a la página principal después del login
-      } else {
-        setError("Usuario o contraseña incorrectos");
-      }
-    } catch (err) {
-      setError("Error al conectar con el servidor");
-    }
+    console.log("Iniciando sesion:", email, password);
+    // Aquí iría la lógica de autenticación en el futuro.
   };
 
   return (
     <div className="container mt-5">
       <h2>Iniciar Sesión</h2>
       {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleLogin} className="w-50 mx-auto">
+      <form onSubmit={startLogin} className="w-50 mx-auto">
         <div className="mb-3">
           <label>Email</label>
           <input 
