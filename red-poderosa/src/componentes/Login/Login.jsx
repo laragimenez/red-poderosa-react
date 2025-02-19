@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
 
@@ -23,7 +23,7 @@ const Login = () => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  const falsologin = async (email, password) => {
+  const falseLogin = async (email, password) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (email === "janet@domain.com" && password === "p12345") {
@@ -53,7 +53,7 @@ const Login = () => {
     setLoading(true); //Activa el estado de carga (loading = true) para mostrar "Cargando..."
     
     try {
-      const data = await falsologin(email, password); 
+      const data = await falseLogin(email, password); 
       // Guardamos el usuario en localStorage
       localStorage.setItem("token", data.token); // Si usas un token
       navigate("/home");// Aquí redirige al usuario a otra página, por ejemplo:
