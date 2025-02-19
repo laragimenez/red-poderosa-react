@@ -3,16 +3,15 @@ import './App.css';
 import React, { useEffect } from 'react';
 import NavBar from './componentes/NavBar/NavBar'; // Asegúrate de tener la ruta correcta.
 import Home from './componentes/Home/MyHome';
-import MyButton from './componentes/MyButton/MyButton';
 import { useState } from 'react';
-import MyInput from './componentes/MyInput/MyInput';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import MyMovies from './componentes/Movies/MyMovies';
 import Movie from './componentes/Movie/Movie';
 import NotFound from './componentes/NotFound/NotFound';
 import Error from './componentes/Error/Error';
 import Users from './componentes/Users/Users';
 import Login from './componentes/Login/Login';
+import Movies from './componentes/Movies/Movies';
+import EditMovie from './componentes/EditMovie/EditMovie';
 
 // Componente ProtectedRoute para redirigir si el usuario no está autenticado
 const ProtectedRoute = ({ isAuthenticated, element }) => {
@@ -50,9 +49,10 @@ const App = () => {
             <Route exact path='/' element={<Login/>}></Route> {/*carga la página de login cuando el usuario va a "/" */}
             {/* Ruta de home protegida: solo accesible si el usuario está autenticado */}
             <Route exact path='/home' element={ <ProtectedRoute isAuthenticated={isAuthenticated} element={<Home/> }/>}></Route>
-            <Route exact path='/movies' element={ <ProtectedRoute isAuthenticated={isAuthenticated} element={<MyMovies/>}/>}></Route>
+            <Route exact path='/movies' element={ <ProtectedRoute isAuthenticated={isAuthenticated} element={<Movies/>}/>}></Route>
             <Route exact path='/users' element={ <ProtectedRoute isAuthenticated={isAuthenticated}  element={<Users/>}/>}></Route>
-            <Route exact path='/movies/:movieName' element={<Movie/>}></Route>
+            <Route exact path='/movie' element={<Movie/>}></Route>
+            <Route exact path="/movie/:id" element={<EditMovie/>}></Route> {/*:id es un parámetro dinámico que se utiliza para obtener el id de la película que se desea editar.*/}
             <Route exact path='/Page-NotFound' element={<NotFound/>}></Route>
             <Route exact path='/Error' element={<Error/>}></Route>
             <Route path='*' element={<Navigate to="/Page-NotFound"/>}></Route>
