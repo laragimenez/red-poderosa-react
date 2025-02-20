@@ -1,5 +1,5 @@
 /* Cambiar tamaño de las columnas */
-.container-users {
+.admin-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,19 +8,23 @@
     
 }
 
-.container {
+.container-search {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     padding: 0 20px; /* Añade margen interno para evitar que los elementos estén pegados a los bordes */
 }
 
-.container input {
+.container-search input {
     width: 60%; /* Ajusta el tamaño del input */
     padding: 8px;
 }
- 
+
+.container-search .btn {
+    padding: 8px 15px;
+}
+  
 .col-id {
     width: 2%;
   }
@@ -35,7 +39,7 @@
     margin-top: 20px;
   }
 
-.spinner-container {
+.container-spinner {
     display: flex;
     justify-content: center;
     align-items: center;

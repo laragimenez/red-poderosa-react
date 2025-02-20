@@ -31,6 +31,7 @@ const NavBar = () => {
                                 <Nav.Link href="/movies">Movies</Nav.Link>
                                 <Nav.Link href="/genres">Genres</Nav.Link>
                                 <Nav.Link href="/users">Users</Nav.Link>
+                                <Nav.Link href="/Admins">Admins</Nav.Link>
                             </>
                         )}
                     </Nav>

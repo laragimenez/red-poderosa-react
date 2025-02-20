@@ -12,6 +12,8 @@ import Users from './componentes/Users/Users';
 import Login from './componentes/Login/Login';
 import Movies from './componentes/Movies/Movies';
 import EditMovie from './componentes/EditMovie/EditMovie';
+import Admins from './componentes/Admins/Admins';
+import NewAdmin from './componentes/Admin/NewAdmin';
 
 // Componente ProtectedRoute para redirigir si el usuario no está autenticado
 const ProtectedRoute = ({ isAuthenticated, element }) => {
@@ -53,6 +55,9 @@ const App = () => {
             <Route exact path='/users' element={ <ProtectedRoute isAuthenticated={isAuthenticated}  element={<Users/>}/>}></Route>
             <Route exact path='/movie' element={<Movie/>}></Route>
             <Route exact path="/movie/:id" element={<EditMovie/>}></Route> {/*:id es un parámetro dinámico que se utiliza para obtener el id de la película que se desea editar.*/}
+            <Route exact path='/users' element={<Users/>}></Route>
+            <Route exact path='/admins' element={<Admins/>}></Route>
+            <Route exact path='/admin/new' element={<NewAdmin/>}></Route>
             <Route exact path='/Page-NotFound' element={<NotFound/>}></Route>
             <Route exact path='/Error' element={<Error/>}></Route>
             <Route path='*' element={<Navigate to="/Page-NotFound"/>}></Route>

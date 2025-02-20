@@ -1,101 +1,139 @@
-import React, { useState } from 'react'
-import MyButton from '../MyButton/MyButton'
+import React, { useEffect, useState } from 'react';
+import { Button, Spinner, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/esm/Button';
-import Table from 'react-bootstrap/Table';
-import Spinner from 'react-bootstrap/Spinner';
-import debounce from 'lodash';
-import 'font-awesome/css/font-awesome.min.css';
 import './Users.css';
 
-
 const Users = () => {
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1); //por defecto digo que esta sea la pagina numero 1
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]);  // Datos de películas
+    const [query, setQuery] = useState("");
+    const [page, setPage] = useState(1); 
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const [users, setUsers] = useState([]);
 
- // Buscar películas (con debounce)
-  const find = debounce((evt) => {  //con debounce evita hacer demasiadas solicitudes o cálculos mientras el usuario escribe.
-    const {value} = evt.target;
-    setQuery(value);
-  },500)
+    // Función para obtener los usuarios
+    const fetchUsers = async () => {
+      try {
+            setLoading(true);
+            let response = await fetch(`http://localhost:5156/User?query=${query}&page=${page}`);
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            let json = await response.json();
+            setUsers(json);  // Asegúrate de que el backend devuelve una lista
+        } catch (e) {
+            console.error("Error:", e);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
 
-  const prevPage = () => {
-    setPage(prevPage => Math.max(prevPage - 1, 1))
-  }
+    useEffect(() => {
+        fetchUsers();
+    }, [page, query]);
 
-  const nextPage = () => {
+    const find = (evt) => {
+        const { value } = evt.target;
+        setQuery(value);
+    };
+    
+    // Función para banear a un usuario
+    const banUser = async (id) => {
+      try {
+          const response = await fetch(`http://localhost:5156/User/${id}/ban`, { method: 'PATCH' });
+          if (response.ok) {
+              alert('Usuario baneado');
+              fetchUsers(); // Refrescar la lista después de banear
+          } else {
+              alert('Error al banear');
+          }
+      } catch (error) {
+          console.error('Error:', error);
+      }
+    };
+
+    // Función para desbanear a un usuario
+    const unbanUser = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5156/User/${id}/unban`, { method: 'PATCH' });
+            if (response.ok) {
+                alert('Usuario desbaneado');
+                fetchUsers(); // Refrescar la lista después de desbanear
+            } else {
+                alert('Error al desbanear');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const prevPage = () => {
+        setPage(prevPage => Math.max(prevPage - 1, 1))
+      }
+    
+    const nextPage = () => {
     setPage(prevPage => Math.min(prevPage + 1, 10))
-  }
+    }
+    
 
-  return (
-    <>
-      <div className="header">
-        <h2>Lista de Usuarios</h2>
-        <div className="search-container ">
-          {/* Campo de búsqueda */}
-          <input type='text'     
-            value={query} 
-            onChange={find} 
-            placeholder="Buscar Usuarios..." 
-            className="form-control w-50"/> 
-          <Link to="/movies" className="btn btn-primary"><i className="fa fa-plus"></i>Nuevo</Link>  {/* Link para crear nueva película */}
-        </div>
-      </div>
- 
-        {
-        loading ?
-            <div className='spinner'> 
-            <Spinner animation="border" variant="primary"/> {/* es un indicador de carga mientras se procesan datos o se espera una respuesta de una API. */} 
-            </div>:
-            <Table striped bordered hover>
-            <thead>
-            <tr>
-                <th className="col-id">#</th>
-                <th className="col-title">Nombre</th>
-                <th className="col-genre">img</th>
-                <th className="col-description">Description</th>
-                <th className="col-actions">Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>1</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>
-                <Link to="" className='btn btn-primary'><i class="fa fa-eye"></i></Link>
-                <Link tO={`/edit/${users.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
-                <Link to="" className='btn btn-primary'><i className="fa fa-times"></i></Link>  
-                </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>
-                <Link to="" className='btn btn-primary'><i class="fa fa-eye"></i></Link>
-                <Link to="" className='btn btn-primary'><i className="fa fa-pencil"></i></Link> 
-                <Link to="" className='btn btn-primary'><i className="fa fa-times"></i></Link> 
-                </td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td colSpan={2}>Larry the Bird</td>
-                <td>@twitter</td>
-            </tr>
-            </tbody>
-        </Table>
+    return (
+        <>
+            <div className="container-users">
+                <h1>Lista de usuarios</h1>
+                <div className="container">
+                    <input  type="text" value={query} onChange={find} className="search-input" placeholder="Buscar usuario por nombre o ID.." />
+                </div>
+            </div>
+            {
+             loading ?
+             <div className='spinner-container'>
+                <Spinner animation="border" variant="primary" className="spinner"/> {/* es un indicador de carga mientras se procesan datos o se espera una respuesta de una API. */} 
+             </div>:
+             <Table striped bordered hover className="table">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Nombre del usuario</th>
+                        <th>email</th>
+                        <th>Fecha de incio</th>
+                        <th>fecha de finalizacion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                    users.map ((user) => {
+                        return (
+                        <tr key={user.id}>
+                            <td>{user.id}</td>
+                            <td>{user.name}</td>
+                            <td>{user.lastName}</td>
+                            <td>{user.mail}</td>
+                            <td>
+                                <Link to='/user/{users.id}' className='btn-ban'>Baneo</Link>
+                                <Button onClick={() => banUser(user.id)} className='btn-ban'>Baneo </Button>
+                                <Button onClick={() => unbanUser(user.id)} className='btn-ban'>Desbanear</Button>
+                                
+                            </td>
+                        </tr>        
+
+                            );
+                        })
+                    }
+                    
+                    
+                </tbody>
+            </Table>
         }
         <div className="pagination-container">
+        {/* Botones de Paginación */}
         <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
         <Button className="btn btn-secondary ms-2" onClick={nextPage}>&gt;</Button>
         </div>
-    </>
-  )
-}
+        </>
+    );
+};
 
-export default Users
+export default Users;

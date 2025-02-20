@@ -1,3 +1,5 @@
+import './Movie.css';
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
@@ -98,10 +100,11 @@ const Movie = () => {
 
     return (
         <>
+            <div className="movie-container">
             {
                 loadingForm ? <div className='spinner'><ImSpinner3/></div> :
                     <>
-                        <h2>{idMovie != undefined ? "Editar canción" : "Nueva canción"}</h2>
+                        <h2>{idMovie != undefined ? "Editar Pelicual" : "Nueva Pelicula"}</h2>
                         <form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3" controlId="txtTitle">
                                 <Form.Label>Título</Form.Label>
@@ -121,6 +124,7 @@ const Movie = () => {
                         </form>
                     </>
             }
+            </div>
         </>
     );
 }
