@@ -10,7 +10,7 @@ import 'font-awesome/css/font-awesome.min.css';
 
 
 const Movies = () => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("all");
   const [page, setPage] = useState(1); //por defecto digo que esta sea la pagina numero 1
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);  // Datos de películas
@@ -18,8 +18,11 @@ const Movies = () => {
   const fetchMovies= async () =>{
     try{
       setLoading (true)
-      let response = await fetch('http://localhost:5058')  //Cambiar ejemplo `http://localhost:5088/Song?query=${query}&page=${page}&pageSize=3`
+      let response = await fetch(`http://localhost:5297/Movie/MovieGener?query=${query}&page=${page}&pageSize=10`)  //Cambiar ejemplo `http://localhost:5088/Song?query=${query}&page=${page}&pageSize=3`
+      console.log(response)
       let json = await response.json();
+
+      console.log(json);
 
       setMovies(json.movies);
     
@@ -85,9 +88,8 @@ const Movies = () => {
         <thead>
           <tr>
             <th className="col-id">#</th>
-            <th className="col-title">Titulo</th>
-            <th className="col-genre">Genero</th>
-            <th className="col-description">Description</th>
+            <th className="col-genre">titulo</th>
+            <th className="col-title">imagen</th>
             <th className="col-actions">Acciones</th>
           </tr>
         </thead>
@@ -97,9 +99,8 @@ const Movies = () => {
               return (
                 <tr>
                   <td>{movie.id}</td>
-                  <td>{movie.title}</td>
-                  <td>{movie.genre}</td>
-                  <td>{movie.description}</td>
+                  <td>{movie.name}</td>
+                  <td>{movie.imageUrl}</td>
                   <td>
                     <Link to="" className='btn btn-primary'><i class="fa fa-eye"></i></Link>
                     <Link to={`/movie/${movie.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
