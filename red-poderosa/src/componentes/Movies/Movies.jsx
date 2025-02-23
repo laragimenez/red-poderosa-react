@@ -10,7 +10,7 @@ import 'font-awesome/css/font-awesome.min.css';
 
 
 const Movies = () => {
-  const [query, setQuery] = useState("all");
+  const [query, setQuery] = useState("");
   const [page, setPage] = useState(1); //por defecto digo que esta sea la pagina numero 1
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);  // Datos de películas
@@ -18,7 +18,8 @@ const Movies = () => {
   const fetchMovies= async () =>{
     try{
       setLoading (true)
-      let response = await fetch(`http://localhost:5297/Movie/MovieGener?query=${query}&page=${page}&pageSize=10`)  //Cambiar ejemplo `http://localhost:5088/Song?query=${query}&page=${page}&pageSize=3`
+      const paramsQuery = query.trim() ? query : "all";
+      let response = await fetch(`http://localhost:5297/Movie/MovieGener?query=${paramsQuery}&page=${page}&pageSize=10`)  //Cambiar ejemplo `http://localhost:5088/Song?query=${query}&page=${page}&pageSize=3`
       console.log(response)
       let json = await response.json();
 
