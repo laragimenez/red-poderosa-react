@@ -54,7 +54,7 @@ const App = () => {
             <Route exact path='/movies' element={ <ProtectedRoute isAuthenticated={isAuthenticated} element={<Movies/>}/>}></Route>
             <Route exact path='/users' element={ <ProtectedRoute isAuthenticated={isAuthenticated}  element={<Users/>}/>}></Route>
             <Route exact path='/movie' element={<Movie/>}></Route>
-            <Route exact path="/movie/:id" element={<EditMovie/>}></Route> {/*:id es un parámetro dinámico que se utiliza para obtener el id de la película que se desea editar.*/}
+            <Route exact path="/movie/:title" element={<Movie/>}></Route> {/*:id es un parámetro dinámico que se utiliza para obtener el id de la película que se desea editar.*/}
             <Route exact path='/users' element={<Users/>}></Route>
             <Route exact path='/admins' element={<Admins/>}></Route>
             <Route exact path='/admin/new' element={<NewAdmin/>}></Route>

@@ -103,8 +103,8 @@ const Movies = () => {
                   <td>{movie.name}</td>
                   <td>{movie.imageUrl}</td>
                   <td>
-                    <Link to="" className='btn btn-primary'><i class="fa fa-eye"></i></Link>
-                    <Link to={`/movie/${movie.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
+                    <Link to={`/movie/${movie.id}`} className='btn btn-primary'><i class="fa fa-eye"></i></Link>
+                    <Link to={`/movie/${movie.name}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
                     <Button variant="danger" onClick={() => deleteMovie(movie.id)}><i className="fa fa-times"></i></Button> {/* Botón de eliminar */}  
                   </td>
                 </tr>
