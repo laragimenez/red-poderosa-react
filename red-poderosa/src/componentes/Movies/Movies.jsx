@@ -6,6 +6,8 @@ import Button from 'react-bootstrap/esm/Button';
 import Table from 'react-bootstrap/Table';
 import Spinner from 'react-bootstrap/Spinner';
 import 'font-awesome/css/font-awesome.min.css';
+import Swal from 'sweetalert2';
+
 
 
 
@@ -30,7 +32,7 @@ const Movies = () => {
     } catch(e){
       console.error("Error fetching movies:", e);
     }  finally{
-      setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -53,22 +55,74 @@ const Movies = () => {
   }
 
   // Función para eliminar una película
-  const deleteMovie = async (movieId) => {
-    try {
-      const response = await fetch(`http://localhost:5058/movies/${movieId}`, {
-        method: 'DELETE', // Método de solicitud DELETE
-      });
-      if (response.ok) {
-        // Si la eliminación es exitosa, actualizamos el estado de las películas
-        setMovies(movies.filter(movie => movie.id !== movieId));
-      } else {
-        console.error('Error deleting movie');
+  const deleteMovie = async (movieId, movieName) => {
+    Swal.fire({
+      title: `¿Deseas borrar esta película?`,
+      text: `Película: ${movieName}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+            console.log(`Deleting movie with ID: ${movieId}`);
+      
+            const response = await fetch(`http://localhost:5297/Movie/DeleteMovie`, { 
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: movieId }) //Ahora enviamos el ID en el body
+            });
+            if (response.ok) {
+                // Si la eliminación es exitosa, actualizamos el estado de las películas
+                setMovies(movies.filter(movie => movie.id !== movieId));
+                Swal.fire("Eliminado", `La película ${movieName} ha sido eliminada.`, "success");
+            } else {
+                Swal.fire("Error", "No se pudo eliminar la película.", "error");
+            }
+        } catch (e) {
+            console.error('Error deleting movie:', e);
+            Swal.fire("Error", "Ocurrió un problema al eliminar.", "error");
+        }
       }
-    } catch (e) {
-      console.error('Error deleting movie:', e);
-    }
-  }
+    });
+  };
 
+  const viewMovieDetails = async (title) => {
+    try {
+      const response = await fetch(`http://localhost:5297/Movie/byName?Title=${title}`);
+      if (!response.ok) {
+        throw new Error("Error al obtener los detalles de la película");
+      }
+      const movie = await response.json(); // Obtenemos los datos completos
+  
+      // Mostramos la alerta con la información completa
+      Swal.fire({
+        title: movie.title || "Título no disponible",
+        html: `
+            <div style="text-align:left;">
+              <p><strong>🎭 Género:</strong> ${movie.genre}</p>
+              <p><strong>📖 Descripción:</strong> ${movie.description}</p>
+              <p><strong>🏆 Tiene Oscar:</strong> ${movie.hasOscar ? "Sí 🏅" : "No ❌"}</p>
+              <img src="${movie.imageUrl || ''}" alt="${movie.title}" style="width: 40%; max-width: 300px; height: auto; display: block; margin: 0 auto; border-radius: 10px;">
+              <p><a href="${movie.videoUrl}" target="_blank" style="color:#ff0000; font-weight:bold;">🎬 Ver tráiler</a></p>
+            </div>
+        `,
+        confirmButtonText: "Cerrar",
+      });
+    } catch (error) {
+      console.error("Error al obtener la película:", error);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo cargar la información de la película.",
+        icon: "error",
+        confirmButtonText: "Cerrar",
+      });
+    }
+  };
+  
   return (
     <>
       <div className="header">
@@ -103,9 +157,9 @@ const Movies = () => {
                   <td>{movie.name}</td>
                   <td>{movie.imageUrl}</td>
                   <td>
-                    <Link to={`/movie/${movie.id}`} className='btn btn-primary'><i class="fa fa-eye"></i></Link>
+                    <Button variant="Info" onClick={() => viewMovieDetails(movie.name)}><i className="fa fa-eye"></i></Button>
                     <Link to={`/movie/${movie.name}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
-                    <Button variant="danger" onClick={() => deleteMovie(movie.id)}><i className="fa fa-times"></i></Button> {/* Botón de eliminar */}  
+                    <Button variant="danger" onClick={() => deleteMovie(movie.id, movie.name)}><i className="fa fa-times"></i></Button> {/* Botón de eliminar */}  
                   </td>
                 </tr>
               );
@@ -119,10 +173,6 @@ const Movies = () => {
       <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
       <Button className="btn btn-secondary ms-2" onClick={nextPage}>&gt;</Button>
     </div>
-
-    {/*<a className= "btn btn-secondary" onClick={prevPage}>Anterior</a>
-    <p>{page}</p>
-    <a className= "btn btn-secondary" onClick={nextPage}>Siguiente</a>/*/}
       
     </>
   )

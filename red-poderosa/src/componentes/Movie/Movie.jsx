@@ -11,39 +11,59 @@ const Movie = () => {
     console.log(title);
     const [loading, setLoading] = useState(false);
     const [loadingForm, setLoadingForm] = useState(false);
+    const [genres, setGenres] = useState([]);
     const [movie, setMovie] = useState({
-        "titleMovie": "string",
-        "descriptionMovie": "string",
-        "genreId": 0,
-        "imageUrl": "string",
-        "videoUrl": "string",
-        "commentIds": [0],
-        "qualifyIds": [0],
-        "hasOscar": true,
-        "id": 0
+        "TitleMovie": "",
+        "DescriptionMovie": "",
+        "GenreId": 0,
+        "ImageUrl": "",
+        "VideoUrl": "",
+        "CommentIds": [0],
+        "QualifyIds": [0],
+        "HasOscar": true,
+        "Id": 0
     });
 
-    const fecthMovie = async () => {
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const response = await fetch(`http://localhost:5297/api/Genre`);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+    
+                const data = await response.json();
+                setGenres(data); // Guardamos la lista de géneros en el estado
+            } catch (error) {
+                console.error("Error obteniendo los géneros:", error.message);
+            }
+        };
+    
+        fetchGenres();
+    }, []);
+
+    const fetchMovie = async () => {
         setLoadingForm(true);
         try {
-            let response = await fetch(`http://localhost:5297/Movie/byName?Title=${title}`);
+            console.log("Datos enviados:", JSON.stringify(movie, null, 2));
+            const response = await fetch(`http://localhost:5297/Movie/byName?Title=${title}`);
             
             console.log("Response: " + response);
 
-            let json = await response.json();
+            const json = await response.json();
 
             console.log("Json: " + json);
 
             setMovie({
-                "titleMovie": json.title,
-                "descriptionMovie": json.description,
-                "genreId": 1,
-                "imageUrl": json.imageUrl,
-                "videoUrl": json.videoUrl,
-                "commentIds": [0],
-                "qualifyIds": [0],
-                "hasOscar": true,
-                "id": json.id
+                "TitleMovie": json.title,
+                "DescriptionMovie": json.description,
+                "GenreId": json.genre?.id || 0,
+                "ImageUrl": json.imageUrl,
+                "VideoUrl": json.videoUrl,
+                "CommentIds": [0],
+                "QualifyIds": [0],
+                "HasOscar": json.hasOscar || false,
+                "Id": json.id
             });
         } catch(e) {
             console.log("error");
@@ -55,73 +75,91 @@ const Movie = () => {
     useEffect(() => {
         console.log(title)
         if(title && title !== '') {
-            fecthMovie();
+            fetchMovie();
         }
     }, [title])
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
+    
         try {
             let response;
-            if( title == undefined) {
-                response = await fetch('http://localhost:5297/Movie', {
-                    method: 'POST',
-                    body: JSON.stringify(movie),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
+            let url, method;
+    
+            if (!title) {
+                // Si no hay título, se crea una nueva película
+                url = 'http://localhost:5297/Movie';
+                method = 'POST';
             } else {
-                response = await fetch('http://localhost:5297/Movie', {
-                    method: 'PUT',
-                    body: JSON.stringify(movie),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                // Si hay título, se intenta actualizar la película
+                url = 'http://localhost:5297/Movie/UpdateMovie';
+                method = 'PUT';
+            }
+    
+            response = await fetch(url, {
+                method,
+                body: JSON.stringify({
+                    movieId: movie.Id,
+                    titleMovie: movie.TitleMovie,
+                    descriptionMovie: movie.DescriptionMovie,
+                    genreId: movie.GenreId,
+                    imageUrl: movie.ImageUrl,
+                    videoUrl: movie.VideoUrl,
+                    hasOscar: movie.HasOscar
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            // Verificar si la respuesta es exitosa antes de parsear JSON
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+    
+            const json = await response.json();
+            // Limpiar el formulario después de un POST exitoso
+            if (method === 'POST') {
+                setMovie({
+                    TitleMovie: "",
+                    DescriptionMovie: "",
+                    GenreId: 0,
+                    ImageUrl: "",
+                    VideoUrl: "",
+                    CommentIds: [],
+                    QualifyIds: [],
+                    HasOscar: false,
+                    Id: 0
                 });
             }
-
-            const json = await response.json();
-
-            setMovie({
-                "titleMovie": "",
-                "descriptionMovie": "",
-                "genreId": 0,
-                "imageUrl": "",
-                "videoUrl": "",
-                "commentIds": [0],
-                "qualifyIds": [0],
-                "hasOscar": true,
-                "id": 0
-            });
-
-            // Usamos SweetAlert2 en lugar de alert()
+    
             Swal.fire({
-                title: '¡Éxito!',
-                text: json.message,
-                icon: 'success',
+                title: json.success ? '¡Éxito!' : '¡Error!',
+                text: json.message || 'Algo salió mal',
+                icon: json.success ? 'success' : 'error',
                 confirmButtonText: 'Aceptar'
             });
-
-        } catch(e) {
-            // Mostramos la alerta de error con SweetAlert2
+    
+        } catch (error) {
             Swal.fire({
                 title: '¡Error!',
-                text: 'Algo salió muy, pero muy mal',
+                text: error.message || 'Algo salió muy, pero muy mal',
                 icon: 'error',
                 confirmButtonText: 'Aceptar'
             });
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setMovie({...movie, [name]: value});
-        console.log(movie);
-    }
+        const { name, value, type, checked } = event.target;
+    
+        setMovie({
+            ...movie,
+            [name]: type === "checkbox" ? checked : name === "GenreId" ? Number(value) : value
+        });
+    };
 
     return (
         <>
@@ -137,8 +175,8 @@ const Movie = () => {
                                 type="text"
                                 placeholder="Ingrese el título de la película"
                                 onChange={handleInputChange}
-                                value={movie.titleMovie}
-                                name="titleMovie"
+                                value={movie.TitleMovie}
+                                name="TitleMovie"
                             />
                         </Form.Group>
 
@@ -148,8 +186,8 @@ const Movie = () => {
                                 type="text"
                                 placeholder="Ingrese la descripción de la película"
                                 onChange={handleInputChange}
-                                value={movie.descriptionMovie}
-                                name="descriptionMovie"
+                                value={movie.DescriptionMovie}
+                                name="DescriptionMovie"
                             />
                         </Form.Group>
 
@@ -158,13 +196,16 @@ const Movie = () => {
                             <Form.Control
                                 as="select"
                                 onChange={handleInputChange}
-                                value={movie.genreId}
-                                name="genreId"
+                                value={movie.GenreId}
+                                name="GenreId"
+                                
                             >
                                 <option value={0}>Seleccione un género</option>
-                                <option value={1}>Acción</option>
-                                <option value={2}>Comedia</option>
-                                <option value={3}>Drama</option>
+                                {genres.map((genre) => (
+                                    <option key={genre.id} value={genre.id}>
+                                        {genre.name}
+                                    </option>
+                                ))}
                             </Form.Control>
                         </Form.Group>
 
@@ -174,11 +215,11 @@ const Movie = () => {
                                 type="text"
                                 placeholder="Ingrese la URL de la imagen"
                                 onChange={handleInputChange}
-                                value={movie.imageUrl}
-                                name="imageUrl"
+                                value={movie.ImageUrl}
+                                name="ImageUrl"
                             />
                         </Form.Group>
-                        {movie.imageUrl && <img src={movie.imageUrl} alt="Imagen de la película" width="200" />}
+                        {movie.ImageUrl && <img src={movie.ImageUrl} alt="Imagen de la película" width="200" />}
 
                         <Form.Group className="mb-3" controlId="txtVideoUrl">
                             <Form.Label>URL del video</Form.Label>
@@ -186,8 +227,8 @@ const Movie = () => {
                                 type="text"
                                 placeholder="Ingrese la URL del video"
                                 onChange={handleInputChange}
-                                value={movie.videoUrl}
-                                name="videoUrl"
+                                value={movie.VideoUrl}
+                                name="VideoUrl"
                             />
                         </Form.Group>
 
@@ -196,8 +237,8 @@ const Movie = () => {
                                 type="checkbox"
                                 label="¿Tiene Oscar?"
                                 onChange={handleInputChange}
-                                checked={movie.hasOscar}
-                                name="hasOscar"
+                                checked={movie.HasOscar}
+                                name="HasOscar"
                             />
                         </Form.Group>
 
