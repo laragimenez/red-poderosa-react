@@ -9,10 +9,10 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
     const navigate = useNavigate();
-    const token = localStorage.getItem("token");
+    const isAuthenticated = localStorage.getItem('isAuthenticated'); 
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        localStorage.removeItem('isAuthenticated');
         navigate("/"); 
     };
 
@@ -26,17 +26,16 @@ const NavBar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        {token && (
+                        {isAuthenticated && (
                             <>
                                 <Nav.Link href="/movies">Movies</Nav.Link>
-                                <Nav.Link href="/genres">Genres</Nav.Link>
                                 <Nav.Link href="/users">Users</Nav.Link>
                                 <Nav.Link href="/Admins">Admins</Nav.Link>
                             </>
                         )}
                     </Nav>
-                    {token && (
-                        <Button variant="outline-light" onClick={handleLogout}>
+                    {isAuthenticated && (
+                        <Button  onClick={handleLogout}>
                             Cerrar sesión
                         </Button>
                     )}

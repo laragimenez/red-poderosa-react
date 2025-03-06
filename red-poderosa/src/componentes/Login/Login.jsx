@@ -13,52 +13,57 @@ const Login = () => {
 
   // Verificamos si ya hay un token y redirigimos al home
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/home");  // Si ya hay token, redirigimos automáticamente a Home
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated) {
+      navigate("/home");  // Si ya está autenticado, redirigimos automáticamente a Home
     }
-  }, [navigate]);
+  }, []);
   
   const validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  const falseLogin = async (email, password) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email === "janet@domain.com" && password === "p12345") {
-          resolve({ user: { email }, token: "mock_token_123" });
-        } else {
-          reject(new Error("Credenciales incorrectas"));
-        }
-      }, 1000);
-    });
-  };
-  
-  const startLogin = async (e) => { //async permite usar await dentro de la función.
+  const startLogin = async (e) => {
     e.preventDefault();
     setError("");
-      
+    
     // Validaciones
     if (!validateEmail(email)) {
       setError("Por favor, ingresa un correo válido.");
       return;
     }
-      
+
     if (password.length < 6) {
       setError("La contraseña debe tener al menos 6 caracteres."); 
       return;
     }
-  
-    setLoading(true); //Activa el estado de carga (loading = true) para mostrar "Cargando..."
+
+    setLoading(true); // Activa el estado de carga (loading = true) para mostrar "Cargando..."
     
     try {
-      const data = await falseLogin(email, password); 
-      // Guardamos el usuario en localStorage
-      localStorage.setItem("token", data.token); // Si usas un token
-      navigate("/home");// Aquí redirige al usuario a otra página, por ejemplo:
+      const response = await fetch(`http://localhost:5297/Login/Login`, { // Reemplaza con la URL de tu API
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          emailUser: email, 
+          passwordUser: password,
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Si la respuesta es exitosa, almacenamos el estado de autenticación
+        localStorage.setItem("isAuthenticated", "true"); // Almacena el estado de autenticación
+        localStorage.setItem("email", email); // Puedes almacenar el email u otro dato si lo necesitas
+        navigate("/home"); // Redirige al usuario al Home después del login exitoso
+      } else {
+        setError(data.message || "Error desconocido"); // Si hay error, mostramos el mensaje
+      }
     } catch (err) {
-      setError(err.message);
+      setError("Hubo un problema al realizar la solicitud.");
     } finally {
       setLoading(false);
     }
@@ -70,7 +75,7 @@ const Login = () => {
         <h2>Iniciar Sesión</h2>
         {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={startLogin} className="w-50 mx-auto">
-          <div className="mb-3">
+          <div className="input">
             <label>Email</label>
             <input 
               type="email" 
@@ -80,7 +85,7 @@ const Login = () => {
               required
             />
           </div>
-          <div className="mb-3">
+          <div className="input">
             <label>Contraseña</label>
             <input 
               type="password" 

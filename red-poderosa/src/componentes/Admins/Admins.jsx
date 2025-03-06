@@ -3,34 +3,43 @@ import { Button, Spinner, Table } from 'react-bootstrap';
 import { ImSearch } from 'react-icons/im';
 import { Link } from 'react-router-dom';
 import './Admins.css';
+import Swal from 'sweetalert2';
 
 const Admins = () => {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [users, setUsers] = useState([]);
+    const [admins, setAdmins] = useState([]);
     
     const fetchAdmins = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch(`http://localhost:5156/User?query=${query}&page=${page}&pageSize=10&isAdmin=true`);
-            const data = await response.json();
-            setUsers(data);
-        } catch (error) {
-            console.error('Error fetching admin users:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        try{
+            setLoading (true)
+            const paramsQuery = query.trim() ? query : "all";
+            let response = await fetch(`http://localhost:5297/Admin/AllUsersAdmin?Query=${paramsQuery}&page=${page}&pageSize=10`) 
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            let json = await response.json();
+        
+            setAdmins(json.users);
+            
+            } catch(e){
+            console.error("Error fetching movies:", e);
+            }  finally{
+            setLoading(false)
+            }
+    }
     
     useEffect(() => {
         fetchAdmins(); // Cargar administradores cuando el componente se monta
     }, [query,page]);
 
-    const find = (evt) => {
-        setQuery(evt.target.value);
-        setPage(1);
-    };
+    const find = (evt) => { 
+        const {value} = evt.target;
+        setQuery(value);
+      }
+    
 
     const prevPage = () => {
         if (page > 1) setPage(page - 1);
@@ -41,35 +50,51 @@ const Admins = () => {
     };
     
 
-    const deleteUser = async (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas bloquear este usuario?')) return;
-
-        try {
-            const response = await fetch(`http://localhost:5156/User/${id}`, {
-                method: 'DELETE',
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                alert(`Error: ${errorData.message}`);
-                return;
+    // Función para eliminar un admin
+    const deleteAdmin = async (userId, name) => {
+        Swal.fire({
+            title: `¿Deseas borrar este administrador?`,
+            text: `Administrador: ${name}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    console.log(`Deleting admin with ID: ${userId}`);
+    
+                    const response = await fetch('http://localhost:5297/User', {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: userId }) // Enviar el ID correcto
+                    });
+    
+                    if (response.ok) {
+                        // Si la eliminación es exitosa, actualizamos el estado de los administradores
+                        setAdmins(admins.filter(admin => admin.id !== userId));
+                        Swal.fire("Eliminado", `El administrador ${name} ha sido eliminado.`, "success");
+                    } else {
+                        const data = await response.json();
+                        Swal.fire("Error", data.message || "No se pudo eliminar el administrador.", "error");
+                    }
+                } catch (e) {
+                    console.error('Error deleting admin:', e);
+                    Swal.fire("Error", "Ocurrió un problema al eliminar.", "error");
+                }
             }
-
-            alert('Usuario ELIMINADO correctamente.');
-            // Refrescar la lista después de borrar
-            setUsers(users.filter(user => user.id !== id));
-        } catch (error) {
-            console.error('Error al eliminar el usuario:', error);
-        }
+        });
     };
 
     return (
         <>
-            <div className="admin-container">
+            <div className="admins-container">
                 <h2>Lista de administradores</h2>
                 <div className="container-search">
                     <input type="text" value={query} onChange={find} placeholder="Buscar administrador" className="search-input"/>
-                    <Link to="/admin/new" className="btn btn-primary"><i className="fa fa-plus"></i>Nuevo</Link>
+                    <Link to="/admin" className="btn btn-primary"><i className="fa fa-plus"></i>Nuevo</Link>
                 </div>
             </div>
             
@@ -82,25 +107,28 @@ const Admins = () => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Estado</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user, index) => (
-                                <tr key={user.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{user.name}</td>
-                                    <td>{user.lastName}</td>
-                                    <td>{user.mail}</td>
+                            {
+                            admins.map((admin) => {
+                                return (
+                                <tr key={admin.id}>
+                                    <td>{admin.id}</td>
+                                    <td>{admin.name}</td>
+                                    <td>{admin.lastName}</td>
+                                    <td>{admin.userStatus}</td>
                                     <td>
-                                        <Link to={`/edit/${user.id}`} className='btn-edit'>Edit</Link>
-                                        <button className='btn-delete' onClick={() => deleteUser(user.id)}>Delete</button>
+                                        <Link to={`/admin/${admin.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link>
+                                        <Button variant="danger" onClick={() => deleteAdmin(admin.id, admin.name)}><i className="fa fa-times"></i></Button>
                                     </td>
                                 </tr>
-                            ))}
+                            
+                            )})}
                         </tbody>
                     </Table>
                 }

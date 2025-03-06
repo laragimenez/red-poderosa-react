@@ -21,11 +21,8 @@ const Movies = () => {
     try{
       setLoading (true)
       const paramsQuery = query.trim() ? query : "all";
-      let response = await fetch(`http://localhost:5297/Movie/MovieGener?query=${paramsQuery}&page=${page}&pageSize=10`)  //Cambiar ejemplo `http://localhost:5088/Song?query=${query}&page=${page}&pageSize=3`
-      console.log(response)
+      let response = await fetch(`http://localhost:5297/Movie/MovieGener?query=${paramsQuery}&page=${page}&pageSize=10`)  
       let json = await response.json();
-
-      console.log(json);
 
       setMovies(json.movies);
     
@@ -140,14 +137,14 @@ const Movies = () => {
           <Spinner animation="border" variant="primary" className="spinner"/> {/* es un indicador de carga mientras se procesan datos o se espera una respuesta de una API. */} 
         </div>:
         <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th className="col-id">#</th>
-            <th className="col-genre">titulo</th>
-            <th className="col-title">imagen</th>
-            <th className="col-actions">Acciones</th>
-          </tr>
-        </thead>
+          <thead>
+            <tr>
+              <th className="col-id">#</th>
+              <th className="col-genre">Titulo</th>
+              <th className="col-title">Imagen</th>
+              <th className="col-actions">Acciones</th>
+            </tr>
+          </thead>
         <tbody>
           {
             movies.map((movie)=>{

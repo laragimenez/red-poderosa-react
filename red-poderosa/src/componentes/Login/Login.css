@@ -2,20 +2,37 @@
 .container {
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Mueve el contenido más hacia arriba */
-    margin-top: 20px;
+    align-items: center;
 }
 
 /* Contenedor centrado con borde de color */
 .login-container {
-    padding: 10px;
+    padding: 20px;
     border-radius: 10px;
-    width: 400px;
+    width: 500px;
     text-align: center;
     border: 2px solid hsl(0, 95%, 14%);
+    margin-top: 20px;
+}
+/* Estilos para los inputs */
+.input {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.input input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
 }
 
 .btn-primary:hover {
-    background-color: red; /* Rojo más oscuro al pasar el mouse */
+    background-color: rgb(77, 1, 1); /* Rojo más oscuro al pasar el mouse */
 }
-

@@ -1,5 +1,5 @@
 /* Cambiar tamaño de las columnas */
-.admin-container {
+.admins-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,10 +19,6 @@
 .container-search input {
     width: 60%; /* Ajusta el tamaño del input */
     padding: 8px;
-}
-
-.container-search .btn {
-    padding: 8px 15px;
 }
   
 .col-id {

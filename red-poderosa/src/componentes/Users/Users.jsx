@@ -1,7 +1,8 @@
+import './Users.css';
 import React, { useEffect, useState } from 'react';
 import { Button, Spinner, Table } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import './Users.css';
+import { Link} from 'react-router-dom';
+import Swal from "sweetalert2";
 
 const Users = () => {
     const [query, setQuery] = useState("");
@@ -38,7 +39,29 @@ const Users = () => {
         const { value } = evt.target;
         setQuery(value);
     };
-    
+
+
+    // Función para mostrar el cuadro de diálogo antes de banear
+    const confirmBanUser = (nameUser, lastNameUser) => {
+        Swal.fire({
+            title: `Banear a ${nameUser} ${lastNameUser}`,
+            input: "text",
+            inputPlaceholder: "Escribe el motivo del baneo",
+            showCancelButton: true,
+            confirmButtonText: "Banear",
+            cancelButtonText: "Cancelar",
+            inputValidator: (value) => {
+                if (!value) {
+                    return "Debes ingresar un motivo para el baneo";
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                banUser(nameUser, lastNameUser, result.value);
+            }
+        });
+    };
+
     // Función para banear a un usuario
     const banUser = async (nameUser, lastNameUser, reason) => {
         try {
@@ -49,47 +72,21 @@ const Users = () => {
                 },
                 body: JSON.stringify({ nameUser, lastNameUser, reason })
             });
-    
+
             const data = await response.json();
-    
+
             if (response.ok && data.success) {
-                alert("Usuario baneado correctamente.");
+                Swal.fire("Usuario baneado", "El usuario ha sido baneado correctamente.", "success");
                 fetchUsers(); // Refrescar la lista después de banear
             } else {
-                alert(data.message || "Error al banear el usuario.");
+                Swal.fire("Error", data.message || "Error al banear el usuario.", "error");
             }
         } catch (error) {
             console.error("Error:", error);
+            Swal.fire("Error", "Hubo un problema con la solicitud.", "error");
         }
     };
 
-    // Función para desbanear a un usuario
-    const unbanUser = async (name, lastName) => {
-        try {
-            const response = await fetch('http://localhost:5297/UserBan/PutBanner', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    nameUser: name,
-                    lastNameUser: lastName
-                })
-            });
-    
-            const result = await response.json();
-            
-            if (result.success) {
-                alert('Usuario desbaneado');
-                fetchUsers(); // Refrescar la lista después de desbanear
-            } else {
-                alert(result.message || 'Error al desbanear');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error en la solicitud de desbaneo.');
-        }
-    };
 
     const prevPage = () => {
         setPage(prevPage => Math.max(prevPage - 1, 1))
@@ -106,7 +103,7 @@ const Users = () => {
                 <h1>Lista de usuarios</h1>
                 <div className="container">
                     <input  type="text" value={query} onChange={find} className="search-input" placeholder="Buscar usuario por nombre o ID.." />
-                    <Link to="/movie" className="btn btn-primary">Usuarios Baneados</Link>
+                    <Link to="/users/baners" className="btn btn-primary">Usuarios Baneados</Link>
                 </div>
             </div>
             {
@@ -144,9 +141,7 @@ const Users = () => {
                                 />
                             </td>
                             <td>
-                                <Button onClick={() => banUser(user.name, user.lastName, "Incumplimiento de normas")} className="btn-ban">Baneo</Button>
-                                <Button onClick={() => unbanUser(user.name, user.lastName)} className='btn-ban'>Desbanear</Button>
-                                
+                                <Button onClick={() => confirmBanUser(user.name, user.lastName)}>Banear</Button>
                             </td>
                         </tr>        
 

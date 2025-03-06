@@ -26,17 +26,10 @@
 }
   
 .col-id {
-    width: 2%;
+    width: 4%;
   }
 .col-actions {
     width: 12%;
-  }
-
-.pagination-container {
-    display: flex;
-    justify-content: center; /* Centrar los botones */
-    align-items: center;
-    margin-top: 20px;
   }
 
 .spinner-container {
@@ -45,6 +38,13 @@
     align-items: center;
     height: 50vh; /* Hace que el spinner ocupe toda la altura de la pantalla */
 }
+
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Centrar los botones */
+    align-items: center;
+    margin-top: 20px;
+  }
 
 .spinner{
     width: 4rem;  /* Aumenta el tamaño del spinner */

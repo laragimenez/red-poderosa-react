@@ -11,17 +11,9 @@ import Error from './componentes/Error/Error';
 import Users from './componentes/Users/Users';
 import Login from './componentes/Login/Login';
 import Movies from './componentes/Movies/Movies';
-import EditMovie from './componentes/EditMovie/EditMovie';
 import Admins from './componentes/Admins/Admins';
-import NewAdmin from './componentes/Admin/NewAdmin';
-
-// Componente ProtectedRoute para redirigir si el usuario no está autenticado
-const ProtectedRoute = ({ isAuthenticated, element }) => {
-    if (!isAuthenticated) {
-      return <Navigate to="/" />; // Redirigir al login si no está autenticado
-    }
-    return element;
-};
+import Admin from './componentes/Admin/Admin';
+import BanUsers from './componentes/BanUsers/BanUsers';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -31,14 +23,21 @@ const App = () => {
       
     // Verificar el token cuando se cargue el componente
     useEffect(() => {
-        const token = localStorage.getItem("token"); // Verifica si hay un token en el localStorage
-        setIsAuthenticated(!!token);
-        setIsLoading(false);  // Si hay un token, se considera autenticado
+        const isAuthenticated = localStorage.getItem("isAuthenticated"); // Obtener el indicador de autenticación
+        setIsAuthenticated(!!isAuthenticated); // Si existe el indicador, el usuario está autenticado
+        setIsLoading(false); // Terminamos de verificar
     }, []);
 
     if (isLoading) {
         return <div>Cargando...</div>; // Puedes mostrar un mensaje o animación de carga mientras se verifica el token
     }
+
+    const ProtectedRoute = ({ isAuthenticated, element }) => {
+        if (!isAuthenticated) {
+          return <Navigate to="/" />; // Si no está autenticado, redirige a la página de login
+        }
+        return element; // Si está autenticado, renderiza la ruta protegida
+    };
 
     return (
     <>
@@ -56,8 +55,10 @@ const App = () => {
             <Route exact path='/movie' element={<Movie/>}></Route>
             <Route exact path="/movie/:title" element={<Movie/>}></Route> {/*:id es un parámetro dinámico que se utiliza para obtener el id de la película que se desea editar.*/}
             <Route exact path='/users' element={<Users/>}></Route>
+            <Route exact path='/users/baners' element={<BanUsers/>}></Route>
             <Route exact path='/admins' element={<Admins/>}></Route>
-            <Route exact path='/admin/new' element={<NewAdmin/>}></Route>
+            <Route exact path='/admin' element={<Admin/>}></Route>
+            <Route exact path='/admin/:id' element={<Admin/>}></Route>
             <Route exact path='/Page-NotFound' element={<NotFound/>}></Route>
             <Route exact path='/Error' element={<Error/>}></Route>
             <Route path='*' element={<Navigate to="/Page-NotFound"/>}></Route>
