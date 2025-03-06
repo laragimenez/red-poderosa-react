@@ -14,6 +14,7 @@ const Admin = () => {
         "lastName": "",
         "birthdate": "",
         "email": "",
+        "password": "",
         "description": "",
         "id": 0
     });
@@ -75,6 +76,7 @@ const Admin = () => {
                     lastName: admin.lastName,
                     birthdate: admin.birthdate ? new Date(admin.birthdate).toISOString() : null,
                     email: admin.email,
+                    password: admin.password, // Aquí se asegura de enviar la contraseña
                     description: admin.description
                 }),
                 headers: {
@@ -104,6 +106,7 @@ const Admin = () => {
                         lastName: "",
                         birthdate: "",
                         email: "",
+                        password: "",
                         description: "",
                         id: 0
                     });
@@ -180,6 +183,18 @@ const Admin = () => {
                                     placeholder="Ingrese el email"
                                     name="email"
                                     value={admin.email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="txtEmail">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Ingrese uan contraseña"
+                                    name="password"
+                                    value={admin.password}
                                     onChange={handleInputChange}
                                     required
                                 />
