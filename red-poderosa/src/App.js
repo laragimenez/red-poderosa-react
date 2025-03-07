@@ -20,8 +20,6 @@ const App = () => {
     const [isLoading, setIsLoading] = useState(true); // Estado para esperar la verificación del token
     const [message, setMessage] = useState("");  // Para el mensaje de advertencia
 
-      
-    // Verificar el token cuando se cargue el componente
     useEffect(() => {
         const isAuthenticated = localStorage.getItem("isAuthenticated"); // Obtener el indicador de autenticación
         setIsAuthenticated(!!isAuthenticated); // Si existe el indicador, el usuario está autenticado
@@ -41,31 +39,29 @@ const App = () => {
 
     return (
     <>
-    <BrowserRouter>
+        <BrowserRouter>
 
-        <NavBar/>
-        {message && <div style={{ color: 'red', padding: '10px', textAlign: 'center' }}>{message}</div>}
+            <NavBar/>
+            {message && <div style={{ color: 'red', padding: '10px', textAlign: 'center' }}>{message}</div>}
 
-        <Routes>
-            <Route exact path='/' element={<Login/>}></Route> {/*carga la página de login cuando el usuario va a "/" */}
-            {/* Ruta de home protegida: solo accesible si el usuario está autenticado */}
-            <Route exact path='/home' element={ <ProtectedRoute isAuthenticated={isAuthenticated} element={<Home/> }/>}></Route>
-            <Route exact path='/movies' element={ <ProtectedRoute isAuthenticated={isAuthenticated} element={<Movies/>}/>}></Route>
-            <Route exact path='/users' element={ <ProtectedRoute isAuthenticated={isAuthenticated}  element={<Users/>}/>}></Route>
-            <Route exact path='/movie' element={<Movie/>}></Route>
-            <Route exact path="/movie/:title" element={<Movie/>}></Route> {/*:id es un parámetro dinámico que se utiliza para obtener el id de la película que se desea editar.*/}
-            <Route exact path='/users' element={<Users/>}></Route>
-            <Route exact path='/users/baners' element={<BanUsers/>}></Route>
-            <Route exact path='/admins' element={<Admins/>}></Route>
-            <Route exact path='/admin' element={<Admin/>}></Route>
-            <Route exact path='/admin/:id' element={<Admin/>}></Route>
-            <Route exact path='/Page-NotFound' element={<NotFound/>}></Route>
-            <Route exact path='/Error' element={<Error/>}></Route>
-            <Route path='*' element={<Navigate to="/Page-NotFound"/>}></Route>
-
-
-        </Routes>
-    </BrowserRouter> 
+            <Routes>
+                <Route exact path='/' element={<Login/>}></Route> {/*carga la página de login cuando el usuario va a "/" */}
+                {/* Ruta de home protegida: solo accesible si el usuario está autenticado */}
+                <Route exact path='/home' element={ <ProtectedRoute isAuthenticated={isAuthenticated} element={<Home/> }/>}></Route>
+                <Route exact path='/movies' element={ <ProtectedRoute isAuthenticated={isAuthenticated} element={<Movies/>}/>}></Route>
+                <Route exact path='/users' element={ <ProtectedRoute isAuthenticated={isAuthenticated}  element={<Users/>}/>}></Route>
+                <Route exact path='/movie' element={<Movie/>}></Route>
+                <Route exact path="/movie/:title" element={<Movie/>}></Route> {/*:id es un parámetro dinámico que se utiliza para obtener el id de la película que se desea editar.*/}
+                <Route exact path='/users' element={<Users/>}></Route>
+                <Route exact path='/users/baners' element={<BanUsers/>}></Route>
+                <Route exact path='/admins' element={<Admins/>}></Route>
+                <Route exact path='/admin' element={<Admin/>}></Route>
+                <Route exact path='/admin/:id' element={<Admin/>}></Route>
+                <Route exact path='/Page-NotFound' element={<NotFound/>}></Route>
+                <Route exact path='/Error' element={<Error/>}></Route>
+                <Route path='*' element={<Navigate to="/Page-NotFound"/>}></Route>
+            </Routes>
+        </BrowserRouter> 
     </>
     ); //con el browser envolvemos todo el codigo Y TODO LO que este fuera de route tanto arriba como afuera se puede hacer cosas la cual se va a repetir en todos los paths
 }

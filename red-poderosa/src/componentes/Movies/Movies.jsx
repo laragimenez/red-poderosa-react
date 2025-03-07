@@ -172,14 +172,13 @@ const Movies = () => {
                 })
               }
             </tbody>
-        </Table>
+          </Table>
       }
       <div className="pagination-container">
         {/* Botones de Paginación */}
         <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
         <Button className="btn btn-secondary ms-2" onClick={nextPage} disabled={movies.length === 0}>&gt;</Button>
       </div>
-      
     </>
   )
 }

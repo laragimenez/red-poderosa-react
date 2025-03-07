@@ -1,7 +1,6 @@
 import './Admins.css';
 import React, { useEffect, useState } from 'react';
 import { Button, Spinner, Table } from 'react-bootstrap';
-import { ImSearch } from 'react-icons/im';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
@@ -60,8 +59,6 @@ const Admins = () => {
           });
         }
     };
-    
-
     // Función para eliminar un admin
     const deleteAdmin = async (userId, name) => {
         Swal.fire({
@@ -112,39 +109,39 @@ const Admins = () => {
                 </div>
                 
                 {
-                    loading ? 
-                        <div className="spinner-admins">
-                            <Spinner animation="border" variant="primary" className="spinner" />
-                        </div> : 
-                        <Table striped bordered hover className="tableAdmins">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Estado</th>
-                                    <th>Actions</th>
+                loading ? 
+                    <div className="spinner-admins">
+                        <Spinner animation="border" variant="primary" className="spinner" />
+                    </div> : 
+                    <Table striped bordered hover className="tableAdmins">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Estado</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                            admins.map((admin) => {
+                                return (
+                                <tr key={admin.id}>
+                                    <td>{admin.id}</td>
+                                    <td>{admin.name}</td>
+                                    <td>{admin.lastName}</td>
+                                    <td>{admin.userStatus}</td>
+                                    <td>
+                                        <Link to={`/admin/${admin.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link>
+                                        <Button variant="danger" onClick={() => deleteAdmin(admin.id, admin.name)}><i className="fa fa-times"></i></Button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                admins.map((admin) => {
-                                    return (
-                                    <tr key={admin.id}>
-                                        <td>{admin.id}</td>
-                                        <td>{admin.name}</td>
-                                        <td>{admin.lastName}</td>
-                                        <td>{admin.userStatus}</td>
-                                        <td>
-                                            <Link to={`/admin/${admin.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link>
-                                            <Button variant="danger" onClick={() => deleteAdmin(admin.id, admin.name)}><i className="fa fa-times"></i></Button>
-                                        </td>
-                                    </tr>
-                                
-                                )})}
-                            </tbody>
-                        </Table>
-                    }
+                            
+                            )})}
+                        </tbody>
+                    </Table>
+                }
                 <div className="pagination-container">
                     {/* Botones de Paginación */}
                     <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>

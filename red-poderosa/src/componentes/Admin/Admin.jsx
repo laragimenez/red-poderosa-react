@@ -25,9 +25,8 @@ const Admin = () => {
         try {
             const response = await fetch(`http://localhost:5297/Admin/GetAdmin?UserId=${id}`);
             const json = await response.json();
-            console.log("Datos recibidos:", json); // 👀 Verifica los datos en consola
+            console.log("Datos recibidos:", json); //Verifica los datos en consola
 
-    
             setAdmin({
                 "name": json.nameUser,
                 "lastName": json.lastnameUser,
@@ -192,7 +191,7 @@ const Admin = () => {
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
                                     type="password"
-                                    placeholder="Ingrese uan contraseña"
+                                    placeholder="Ingrese una contraseña"
                                     name="password"
                                     value={admin.password}
                                     onChange={handleInputChange}

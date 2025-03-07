@@ -11,7 +11,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Verificamos si ya hay un token y redirigimos al home
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
     if (isAuthenticated) {
@@ -70,47 +69,42 @@ const Login = () => {
   };
 
   return (
-    <div className='container'>
-      <div className="login-container">
-        <h2>Iniciar Sesión</h2>
-        {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={startLogin} className="w-50 mx-auto">
-          <div className="input">
-            <label>Email</label>
-            <input 
-              type="email" 
-              className="form-control" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required
-            />
+      <>
+        <div className='container'>
+          <div className="login-container">
+            <h2>Iniciar Sesión</h2>
+            {error && <div className="alert alert-danger">{error}</div>}
+            <form onSubmit={startLogin} className="w-50 mx-auto">
+              <div className="input">
+              <label>Email</label>
+              <input 
+                type="email" 
+                className="form-control" 
+                placeholder='Ingrese un email'
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required
+              />
+              </div>
+              <div className="input">
+                <label>Contraseña</label>
+                <input 
+                  type="password" 
+                  className="form-control"
+                  placeholder='Ingrese una contraseña' 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  required //obliga a que el usuario complete ambos campos antes de enviar el formulario.
+                />
+              </div>
+                  <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                    {loading ? "Cargando..." : "Iniciar Sesión"}
+                  </button>
+            </form>
           </div>
-          <div className="input">
-            <label>Contraseña</label>
-            <input 
-              type="password" 
-              className="form-control" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required //obliga a que el usuario complete ambos campos antes de enviar el formulario.
-            />
-          </div>
-          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-            {loading ? "Cargando..." : "Iniciar Sesión"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+        </div>
+    </>
+  )
 };
 
-
 export default Login;
-
-
-/*try {
-  const response = await fetch("https://tu-api.com/login", {  // envía los datos al backend (https://tu-api.com/login) usando POST
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });*/
