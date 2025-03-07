@@ -8,14 +8,12 @@ import Spinner from 'react-bootstrap/Spinner';
 import 'font-awesome/css/font-awesome.min.css';
 import Swal from 'sweetalert2';
 
-
-
-
 const Movies = () => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1); //por defecto digo que esta sea la pagina numero 1
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);  // Datos de películas
+  const [totalRecords, setTotalRecords] = useState(0);
 
   const fetchMovies= async () =>{
     try{
@@ -25,6 +23,7 @@ const Movies = () => {
       let json = await response.json();
 
       setMovies(json.movies);
+      setTotalRecords(json.totalRecords);
     
     } catch(e){
       console.error("Error fetching movies:", e);
@@ -48,8 +47,18 @@ const Movies = () => {
   }
 
   const nextPage = () => {
-    setPage(prevPage => Math.min(prevPage + 1, 10))
-  }
+    const totalPages = Math.ceil(totalRecords / 10); // Calcula cuántas páginas hay en total
+    if (page < totalPages) { 
+      setPage(prevPage => prevPage + 1);
+    }else {
+      Swal.fire({
+        icon: "info",
+        title: "No hay más películas",
+        text: "Has llegado al final de la lista.",
+        confirmButtonText: "Aceptar"
+      });
+    }
+  };
 
   // Función para eliminar una película
   const deleteMovie = async (movieId, movieName) => {
@@ -123,7 +132,7 @@ const Movies = () => {
   return (
     <>
       <div className="header">
-        <h2>Lista de peliculas</h2>
+        <h1>Lista de peliculas</h1>
         <div className="search-container ">
           {/* Campo de búsqueda */}
           <input type='text' value={query} onChange={find} placeholder="Buscar película..." className="form-control w-50"/> 
@@ -131,45 +140,45 @@ const Movies = () => {
         </div>
       </div>
  
-    {
-      loading ?
-        <div className='spinner-container'> 
-          <Spinner animation="border" variant="primary" className="spinner"/> {/* es un indicador de carga mientras se procesan datos o se espera una respuesta de una API. */} 
-        </div>:
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th className="col-id">#</th>
-              <th className="col-genre">Titulo</th>
-              <th className="col-title">Imagen</th>
-              <th className="col-actions">Acciones</th>
-            </tr>
-          </thead>
-        <tbody>
-          {
-            movies.map((movie)=>{
-              return (
-                <tr>
-                  <td>{movie.id}</td>
-                  <td>{movie.name}</td>
-                  <td>{movie.imageUrl}</td>
-                  <td>
-                    <Button variant="Info" onClick={() => viewMovieDetails(movie.name)}><i className="fa fa-eye"></i></Button>
-                    <Link to={`/movie/${movie.name}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
-                    <Button variant="danger" onClick={() => deleteMovie(movie.id, movie.name)}><i className="fa fa-times"></i></Button> {/* Botón de eliminar */}  
-                  </td>
-                </tr>
-              );
-            })
-          }
-        </tbody>
-      </Table>
-    }
-    <div className="pagination-container">
-      {/* Botones de Paginación */}
-      <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
-      <Button className="btn btn-secondary ms-2" onClick={nextPage}>&gt;</Button>
-    </div>
+      {
+        loading ?
+          <div className='spinner-container'> 
+            <Spinner animation="border" variant="primary" className="spinner"/> {/* es un indicador de carga mientras se procesan datos o se espera una respuesta de una API. */} 
+          </div>:
+          <Table striped bordered hover className="tableMovies">
+            <thead>
+              <tr>
+                <th className="col-id">#</th>
+                <th className="col-genre">Titulo</th>
+                <th className="col-title">Imagen</th>
+                <th className="col-actions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                movies.map((movie)=>{
+                  return (
+                    <tr>
+                      <td>{movie.id}</td>
+                      <td>{movie.name}</td>
+                      <td>{movie.imageUrl}</td>
+                      <td>
+                        <Button variant="Info" onClick={() => viewMovieDetails(movie.name)}><i className="fa fa-eye"></i></Button>
+                        <Link to={`/movie/${movie.name}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
+                        <Button variant="danger" onClick={() => deleteMovie(movie.id, movie.name)}><i className="fa fa-times"></i></Button> {/* Botón de eliminar */}  
+                      </td>
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+        </Table>
+      }
+      <div className="pagination-container">
+        {/* Botones de Paginación */}
+        <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
+        <Button className="btn btn-secondary ms-2" onClick={nextPage} disabled={movies.length === 0}>&gt;</Button>
+      </div>
       
     </>
   )

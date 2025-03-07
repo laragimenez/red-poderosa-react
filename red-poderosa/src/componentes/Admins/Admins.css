@@ -1,48 +1,49 @@
-/* Cambiar tamaño de las columnas */
+html, body {
+    height: 100%; /* Hace que el contenedor de la página ocupe el 100% de la altura de la pantalla */
+    margin: 0; /* Elimina el margen predeterminado */
+}
+
 .admins-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px; /* Espaciado entre elementos */
+    gap: 15px;
     margin: 15px;
-    
+    width: 90%; /* Ajusta el contenedor para que ocupe más espacio */
 }
 
-.container-search {
+.container-admins {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0 20px; /* Añade margen interno para evitar que los elementos estén pegados a los bordes */
+    padding: 0 20px;
 }
 
-.container-search input {
-    width: 60%; /* Ajusta el tamaño del input */
-    padding: 8px;
+.container-admins input {
+    width: 50%; /* Ajusta el tamaño del input */
+    padding: 10px; /* Aumenta el padding */
 }
-  
-.col-id {
-    width: 2%;
-  }
-.col-actions {
-    width: 12%;
-  }
+
+.tableAdmins tbody {
+    height: 280px; 
+}
 
 .pagination-container {
     display: flex;
-    justify-content: center; /* Centrar los botones */
+    justify-content: center;
     align-items: center;
-    margin-top: 20px;
-  }
+    padding: 10px; /* Agregué padding */
+}
 
-.container-spinner {
+.spinner-admins {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50vh; /* Hace que el spinner ocupe toda la altura de la pantalla */
+    height: 50vh;
 }
 
 .spinner{
-    width: 4rem;  /* Aumenta el tamaño del spinner */
-    height: 4rem; 
+    width: 6rem;  /* Aumenté el tamaño del spinner */
+    height: 6rem;
 }

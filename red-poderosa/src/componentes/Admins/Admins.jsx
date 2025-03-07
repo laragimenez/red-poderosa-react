@@ -1,8 +1,8 @@
+import './Admins.css';
 import React, { useEffect, useState } from 'react';
 import { Button, Spinner, Table } from 'react-bootstrap';
 import { ImSearch } from 'react-icons/im';
 import { Link } from 'react-router-dom';
-import './Admins.css';
 import Swal from 'sweetalert2';
 
 const Admins = () => {
@@ -10,6 +10,7 @@ const Admins = () => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [admins, setAdmins] = useState([]);
+    const [totalRecords, setTotalRecords] = useState(0);
     
     const fetchAdmins = async () => {
         try{
@@ -23,6 +24,7 @@ const Admins = () => {
             let json = await response.json();
         
             setAdmins(json.users);
+            setTotalRecords(json.totalRecords);
             
             } catch(e){
             console.error("Error fetching movies:", e);
@@ -46,7 +48,17 @@ const Admins = () => {
     };
 
     const nextPage = () => {
-        setPage(page + 1);
+        const totalPages = Math.ceil(totalRecords / 10); // Calcula cuántas páginas hay en total
+        if (page < totalPages) { 
+          setPage(prevPage => prevPage + 1);
+        }else {
+          Swal.fire({
+            icon: "info",
+            title: "No hay más películas",
+            text: "Has llegado al final de la lista.",
+            confirmButtonText: "Aceptar"
+          });
+        }
     };
     
 
@@ -90,53 +102,55 @@ const Admins = () => {
 
     return (
         <>
-            <div className="admins-container">
-                <h2>Lista de administradores</h2>
-                <div className="container-search">
-                    <input type="text" value={query} onChange={find} placeholder="Buscar administrador" className="search-input"/>
-                    <Link to="/admin" className="btn btn-primary"><i className="fa fa-plus"></i>Nuevo</Link>
+            <div className="admins">
+                <div className="admins-container">
+                    <h2>Lista de administradores</h2>
+                    <div className="container-admins">
+                        <input type="text" value={query} onChange={find} placeholder="Buscar administrador" className="search-input"/>
+                        <Link to="/admin" className="btn btn-primary"><i className="fa fa-plus"></i>Nuevo</Link>
+                    </div>
                 </div>
-            </div>
-            
-            {
-                loading ? 
-                    <div className="container-spinner">
-                        <Spinner animation="border" variant="primary" className="spinner" />
-                    </div> : 
-                    <Table striped bordered hover className="table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Estado</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                            admins.map((admin) => {
-                                return (
-                                <tr key={admin.id}>
-                                    <td>{admin.id}</td>
-                                    <td>{admin.name}</td>
-                                    <td>{admin.lastName}</td>
-                                    <td>{admin.userStatus}</td>
-                                    <td>
-                                        <Link to={`/admin/${admin.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link>
-                                        <Button variant="danger" onClick={() => deleteAdmin(admin.id, admin.name)}><i className="fa fa-times"></i></Button>
-                                    </td>
+                
+                {
+                    loading ? 
+                        <div className="spinner-admins">
+                            <Spinner animation="border" variant="primary" className="spinner" />
+                        </div> : 
+                        <Table striped bordered hover className="tableAdmins">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Estado</th>
+                                    <th>Actions</th>
                                 </tr>
-                            
-                            )})}
-                        </tbody>
-                    </Table>
-                }
+                            </thead>
+                            <tbody>
+                                {
+                                admins.map((admin) => {
+                                    return (
+                                    <tr key={admin.id}>
+                                        <td>{admin.id}</td>
+                                        <td>{admin.name}</td>
+                                        <td>{admin.lastName}</td>
+                                        <td>{admin.userStatus}</td>
+                                        <td>
+                                            <Link to={`/admin/${admin.id}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link>
+                                            <Button variant="danger" onClick={() => deleteAdmin(admin.id, admin.name)}><i className="fa fa-times"></i></Button>
+                                        </td>
+                                    </tr>
+                                
+                                )})}
+                            </tbody>
+                        </Table>
+                    }
                 <div className="pagination-container">
                     {/* Botones de Paginación */}
                     <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
-                    <Button className="btn btn-secondary ms-2" onClick={nextPage}>&gt;</Button>
+                    <Button className="btn btn-secondary ms-2" onClick={nextPage} disabled={admins.length === 0}>&gt;</Button>
                 </div>
+            </div>
         </>
     );
 };

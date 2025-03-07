@@ -3,17 +3,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px; /* Espaciado entre elementos */
-    margin: 15px;
     
 }
-
 .search-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 0 20px; /* Añade margen interno para evitar que los elementos estén pegados a los bordes */
+    gap: 80px;
+    margin: 10px;
 }
 
 .search-container input {
@@ -21,29 +19,20 @@
     padding: 8px;
 }
 
-.search-container .btn {
-    padding: 8px 15px;
-}
-  
-.col-id {
-    width: 4%;
-  }
-.col-actions {
-    width: 12%;
-  }
-
 .spinner-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50vh; /* Hace que el spinner ocupe toda la altura de la pantalla */
 }
+.tableMovies {              
+    height: 380px;
+}
 
 .pagination-container {
     display: flex;
     justify-content: center; /* Centrar los botones */
     align-items: center;
-    margin-top: 20px;
   }
 
 .spinner{

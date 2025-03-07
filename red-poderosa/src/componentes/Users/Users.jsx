@@ -9,6 +9,7 @@ const Users = () => {
     const [page, setPage] = useState(1); 
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
+    const [totalRecords, setTotalRecords] = useState(0);
 
     // Función para obtener los usuarios
     const fetchUsers = async () => {
@@ -23,6 +24,7 @@ const Users = () => {
             
             let json = await response.json();
             setUsers(json.users);
+            setTotalRecords(json.totalRecords);
         } catch (e) {
             console.error("Error:", e);
         } finally {
@@ -93,8 +95,18 @@ const Users = () => {
       }
     
     const nextPage = () => {
-    setPage(prevPage => Math.min(prevPage + 1, 10))
-    }
+        const totalPages = Math.ceil(totalRecords / 10); // Calcula cuántas páginas hay en total
+        if (page < totalPages) { 
+          setPage(prevPage => prevPage + 1);
+        }else {
+          Swal.fire({
+            icon: "info",
+            title: "No hay más películas",
+            text: "Has llegado al final de la lista.",
+            confirmButtonText: "Aceptar"
+          });
+        }
+    };
     
 
     return (
@@ -156,7 +168,7 @@ const Users = () => {
         <div className="pagination-container">
         {/* Botones de Paginación */}
         <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
-        <Button className="btn btn-secondary ms-2" onClick={nextPage}>&gt;</Button>
+        <Button className="btn btn-secondary ms-2" onClick={nextPage} disabled={users.length === 0}>&gt;</Button>
         </div>
         </>
     );
