@@ -111,6 +111,7 @@ const Movies = () => {
             <div style="text-align:left;">
               <p><strong>🎭 Género:</strong> ${movie.genre}</p>
               <p><strong>📖 Descripción:</strong> ${movie.description}</p>
+              <p><strong>📖 Calificacion:</strong> ${movie.averageQualify}</p>
               <p><strong>🏆 Tiene Oscar:</strong> ${movie.hasOscar ? "Sí 🏅" : "No ❌"}</p>
               <img src="${movie.imageUrl || ''}" alt="${movie.title}" style="width: 40%; max-width: 300px; height: auto; display: block; margin: 0 auto; border-radius: 10px;">
               <p><a href="${movie.videoUrl}" target="_blank" style="color:#ff0000; font-weight:bold;">🎬 Ver tráiler</a></p>
@@ -149,8 +150,8 @@ const Movies = () => {
             <thead>
               <tr>
                 <th className="col-id">#</th>
-                <th className="col-genre">Titulo</th>
-                <th className="col-title">Imagen</th>
+                <th className="col-titulo">Titulo</th>
+                <th className="col-imagen">Imagen</th>
                 <th className="col-actions">Acciones</th>
               </tr>
             </thead>
