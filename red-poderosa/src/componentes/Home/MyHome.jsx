@@ -23,6 +23,8 @@ const MyHome = () => {
   // Llamar a la función cuando el componente se monte
   useEffect(() => {
     fetchConnectedUser();
+    const interval = setInterval(fetchConnectedUser, 5000); // Actualiza cada 5 segundos
+    return () => clearInterval(interval); // Limpia el intervalo cuando el componente se desmonta
   }, []); // El array vacío [] asegura que la función solo se ejecute una vez al montar el componente
 
   return (
