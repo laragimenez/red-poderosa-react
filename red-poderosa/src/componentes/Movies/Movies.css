@@ -1,4 +1,3 @@
-/* Cambiar tamaño de las columnas */
 .header {
     display: flex;
     flex-direction: column;
@@ -15,7 +14,7 @@
 }
 
 .search-container input {
-    width: 60%; /* Ajusta el tamaño del input */
+    width: 60%;
     padding: 8px;
 }
 
@@ -34,6 +33,9 @@
     justify-content: center; /* Centrar los botones */
     align-items: center;
   }
+.pagination-container{
+    color: white;
+}
 
 .spinner{
     width: 4rem;  /* Aumenta el tamaño del spinner */

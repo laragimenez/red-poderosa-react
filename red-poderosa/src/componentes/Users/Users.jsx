@@ -113,7 +113,7 @@ const Users = () => {
         <>
             <div className="container-users">
                 <h1>Lista de usuarios</h1>
-                <div className="container">
+                <div className="user-container">
                     <input  type="text" value={query} onChange={find} className="search-input" placeholder="Buscar usuario por nombre o ID.." />
                     <Link to="/users/baners" className="btn btn-primary">Usuarios Baneados</Link>
                 </div>
@@ -167,7 +167,8 @@ const Users = () => {
         }
         <div className="pagination-container">
         {/* Botones de Paginación */}
-        <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
+        <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button>
+        <p>{page}</p>
         <Button className="btn btn-secondary ms-2" onClick={nextPage} disabled={users.length === 0}>&gt;</Button>
         </div>
         </>

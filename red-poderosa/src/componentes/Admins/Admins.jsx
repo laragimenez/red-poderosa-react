@@ -99,7 +99,7 @@ const Admins = () => {
 
     return (
         <>
-            <div className="admins">
+            
                 <div className="admins-container">
                     <h2>Lista de administradores</h2>
                     <div className="container-admins">
@@ -144,10 +144,11 @@ const Admins = () => {
                 }
                 <div className="pagination-container">
                     {/* Botones de Paginación */}
-                    <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
+                    <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button>
+                    <p>{page}</p>
                     <Button className="btn btn-secondary ms-2" onClick={nextPage} disabled={admins.length === 0}>&gt;</Button>
                 </div>
-            </div>
+            
         </>
     );
 };

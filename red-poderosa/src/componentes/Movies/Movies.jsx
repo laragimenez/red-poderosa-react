@@ -132,53 +132,56 @@ const Movies = () => {
   
   return (
     <>
-      <div className="header">
-        <h1>Lista de peliculas</h1>
-        <div className="search-container ">
-          {/* Campo de búsqueda */}
-          <input type='text' value={query} onChange={find} placeholder="Buscar película..." className="form-control w-50"/> 
-          <Link to="/movie" className="btn btn-primary"><i className="fa fa-plus"></i>Nuevo</Link>  {/* Link para crear nueva película */}
+      <div className='container-movies'>
+        <div className="header">
+          <h1>Lista de peliculas</h1>
+          <div className="search-container ">
+            {/* Campo de búsqueda */}
+            <input type='text' value={query} onChange={find} placeholder="Buscar película..." className="form-control w-50"/> 
+            <Link to="/movie" className="btn btn-primary"><i className="fa fa-plus"></i>Nuevo</Link>  {/* Link para crear nueva película */}
+          </div>
         </div>
-      </div>
- 
-      {
-        loading ?
-          <div className='spinner-container'> 
-            <Spinner animation="border" variant="primary" className="spinner"/> {/* es un indicador de carga mientras se procesan datos o se espera una respuesta de una API. */} 
-          </div>:
-          <Table striped bordered hover className="tableMovies">
-            <thead>
-              <tr>
-                <th className="col-id">#</th>
-                <th className="col-titulo">Titulo</th>
-                <th className="col-imagen">Imagen</th>
-                <th className="col-actions">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                movies.map((movie)=>{
-                  return (
-                    <tr>
-                      <td>{movie.id}</td>
-                      <td>{movie.name}</td>
-                      <td>{movie.imageUrl}</td>
-                      <td>
-                        <Button variant="Info" onClick={() => viewMovieDetails(movie.name)}><i className="fa fa-eye"></i></Button>
-                        <Link to={`/movie/${movie.name}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
-                        <Button variant="danger" onClick={() => deleteMovie(movie.id, movie.name)}><i className="fa fa-times"></i></Button> {/* Botón de eliminar */}  
-                      </td>
-                    </tr>
-                  );
-                })
-              }
-            </tbody>
-          </Table>
-      }
-      <div className="pagination-container">
-        {/* Botones de Paginación */}
-        <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button><span>{page}</span>
-        <Button className="btn btn-secondary ms-2" onClick={nextPage} disabled={movies.length === 0}>&gt;</Button>
+  
+        {
+          loading ?
+            <div className='spinner-container'> 
+              <Spinner animation="border" variant="primary" className="spinner"/> {/* es un indicador de carga mientras se procesan datos o se espera una respuesta de una API. */} 
+            </div>:
+            <Table striped bordered hover className="tableMovies">
+              <thead>
+                <tr>
+                  <th className="col-id">#</th>
+                  <th className="col-titulo">Titulo</th>
+                  <th className="col-imagen">Imagen</th>
+                  <th className="col-actions">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  movies.map((movie)=>{
+                    return (
+                      <tr>
+                        <td>{movie.id}</td>
+                        <td>{movie.name}</td>
+                        <td>{movie.imageUrl}</td>
+                        <td>
+                          <Button variant="Info" onClick={() => viewMovieDetails(movie.name)}><i className="fa fa-eye"></i></Button>
+                          <Link to={`/movie/${movie.name}`} className='btn btn-primary'><i className="fa fa-pencil"></i></Link> {/*VERIFICAR La logica DE EDITAR Y ELIMINAR LAS RUTAS*/}
+                          <Button variant="danger" onClick={() => deleteMovie(movie.id, movie.name)}><i className="fa fa-times"></i></Button> {/* Botón de eliminar */}  
+                        </td>
+                      </tr>
+                    );
+                  })
+                }
+              </tbody>
+            </Table>
+        }
+        <div className="pagination-container">
+          {/* Botones de Paginación */}
+          <Button className="btn btn-secondary me-2" onClick={prevPage} disabled={page === 1}>&lt;</Button>
+          <p>{page}</p>
+          <Button className="btn btn-secondary ms-2" onClick={nextPage} disabled={movies.length === 0}>&gt;</Button>
+        </div>
       </div>
     </>
   )

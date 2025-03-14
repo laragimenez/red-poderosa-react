@@ -1,46 +1,43 @@
-body{
-    background: radial-gradient(circle, hwb(13 4% 73%), black ); /* Degradado radial de azul a rosa */ 
-}
+
 .dashboard-container {
     text-align: center;
     font-family: Arial, sans-serif;
     margin-top: 50px;
-    background: radial-gradient(circle,hsl(13, 81%, 10%), black ,); /* Degradado radial de azul a rosa */
-  }
-  
-  .stat-card {
-    background: radial-gradient(circle, hsl(0, 81%, 15%) , hsl(0, 78%, 2%));
+    background: radial-gradient(circle, hwb(13 4% 73%), black ); 
+    
+} 
+.stat-card {
+    background: radial-gradient(circle, hwb(13 4% 73%), black ); 
     padding: 30px;
     border-radius: 80px;
     border: 2px solid  white;
     box-shadow: 0 4px 6px red;
     margin-top: 30px;
     display: inline-block;
-  }
+}
   
-  h2 {
+h2 {
     color: #fff;
-  }
-  
-  h1 {
+}
+
+h1 {
     font-size: 2rem;
     color: #f0f0f0;
-  }
-  
-  .connected-users-container {
+}
+
+.connected-users-container {
     margin-top: 20px;
-  }
-  
-  .connected-users {
+}
+
+.connected-users {
     font-size: 10rem;
     font-weight: bold;
     color:hwb(231 0% 95%); 
     animation: glowing 1.5s ease-in-out infinite; /* Animación para dar efecto de parpadeo */
 }
-  
-  @keyframes glowing {
-    0% { text-shadow: 0 0 5px white, 0 0 10px hsl(0, 100%, 50%),  0 0 90px #ff1493, 0 0 100px #ff1493, 0 0 150px hwb(197 8% 0%); }
+
+@keyframes glowing {
+    0% { text-shadow: 0 0 5px white, 0 0 10px hsl(0, 100%, 50%),  0 0 90px #ff1493, 0 0 100px hsl(101, 100%, 54%), 0 0 150px hwb(197 8% 0%); }
     50% { text-shadow: 0 0 10px white, 0 0 150px hwb(0 8% 0%), 0 0 180px rgb(240, 35, 223); }
-    100% { text-shadow: 0 0 5px white, 0 0 10px hwb(0 0% 0%), 0 0 90px #ff1493, 0 0 100px #ff1493, 0 0 150px hwb(192 11% 3%); }
-  }
-  
+    100% { text-shadow: 0 0 5px white, 0 0 10px hwb(0 0% 0%), 0 0 90px #ff1493, 0 0 100px hsl(96, 100%, 54%), 0 0 150px hwb(192 11% 3%); }
+}

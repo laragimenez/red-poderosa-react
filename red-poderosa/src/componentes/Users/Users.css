@@ -1,19 +1,19 @@
-/* Cambiar tamaño de las columnas */
 .container-users{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.container {
+.user-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    gap: 60px;
     width: 100%;
+    gap: 80px;
+    margin: 10px;
 }
 
-.container input {
-    width: 60%; /* Ajusta el tamaño del input */
+.user-container input {
+    width: 50%; 
     padding: 8px;
 }
  
@@ -29,6 +29,10 @@
     justify-content: center; /* Centrar los botones */
     align-items: center;
     margin-top: 10px;
+}
+
+.pagination-container p {
+    color: white;
 }
 
 .spinner-container {
